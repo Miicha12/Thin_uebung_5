@@ -98,7 +98,7 @@ public int collatzLengthOpt(long n) {
         int bestN = 1;
         int bestLen = 0;
         for (int n = 1; n <= x; n++) {
-            int L = collatzLengthIterative(n);
+            int L = collatzLengthOpt(n);
             if (L > bestLen) {
                 bestLen = L;
                 bestN = n;
