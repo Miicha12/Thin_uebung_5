@@ -29,15 +29,47 @@ public class CollatzP {
     /**
      * Optimierte (rekursive + Memo) Berechnung der Collatz-Länge für n.
      */
-    public int collatzLengthOpt(long n) {
-        if (cache.containsKey(n)) {
-            return cache.get(n);
-        }
-        long next = (n % 2 == 0) ? (n / 2) : (3 * n + 1);
-        int len = 1 + collatzLengthOpt(next);
-        cache.put(n, len);
-        return len;
+public int collatzLengthOpt(long n) {
+    if (cache.containsKey(n)) {
+        return cache.get(n);
     }
+    long next = (n % 2 == 0) ? (n / 2) : (3 * n + 1);
+    int len = 1 + collatzLengthOpt(next);
+    
+    // Speicher nur Ergebnisse für kleinere Werte
+    if (n <= 10_000_000) {
+        cache.put(n, len);
+    }
+
+    return len;
+}
+
+    /**
+     * Iterative Berechnung der Collatz-Länge für n mit Memoisierung.
+     */
+    public int collatzLengthIterative(long n) {
+    long original = n;
+    int count = 0;
+
+    while (n != 1 && !cache.containsKey(n)) {
+        if ((n & 1) == 0) {
+            n = n / 2;
+        } else {
+            n = 3 * n + 1;
+        }
+        count++;
+    }
+
+    count += cache.getOrDefault(n, 0);
+
+    // Wieder rückwärts speichern, wenn klein genug
+    if (original <= 10_000_000) {
+        cache.put(original, count);
+    }
+
+    return count;
+}
+
 
     /**
      * Naive Variante von P: sucht im Intervall [1..x] die Zahl mit maximaler Collatz-Länge.
@@ -66,7 +98,7 @@ public class CollatzP {
         int bestN = 1;
         int bestLen = 0;
         for (int n = 1; n <= x; n++) {
-            int L = collatzLengthOpt(n);
+            int L = collatzLengthIterative(n);
             if (L > bestLen) {
                 bestLen = L;
                 bestN = n;
