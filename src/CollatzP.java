@@ -91,14 +91,13 @@ public int collatzLengthOpt(long n) {
      * Optimierte Variante von P: nutzt Memoisierung.
      */
     public int P_opt(int x) {
-        // Cache neu initialisieren für jeden Aufruf
-        cache.clear();
+
         cache.put(1L, 0);
 
         int bestN = 1;
         int bestLen = 0;
         for (int n = 1; n <= x; n++) {
-            int L = collatzLengthOpt(n);
+            int L = collatzLengthIterative(n);
             if (L > bestLen) {
                 bestLen = L;
                 bestN = n;
